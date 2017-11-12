@@ -15,4 +15,12 @@ echo Time is `date`
 echo Directory is `pwd`
 echo PBS job ID is $PBS_JOBID
 
+#! application name
+application="./jacobi"
+#! run options for the application
+options="--norder 4000 --iterations 20000"
+
+#! profile the executable
+#!amplxe-cl -quiet -collect hotspots -result-dir VTuneReport $application $options
+
 ./jacobi --norder 4000 --iterations 20000

@@ -57,11 +57,8 @@ int run(float *A, float *b, float *x, float *xtmp)
       dot = 0.0;
       for (col = 0; col < N; col++)
       {
-          // Replace if statement with addition and subtraction
-          // Row major order
           dot += A[col + row*N] * x[col];
       }
-      // Instead of if(row != col)
       dot -= A[row + row*N] * x[row];
 
       xtmp[row] = (b[row] - dot) / A[row + row*N];
@@ -76,7 +73,6 @@ int run(float *A, float *b, float *x, float *xtmp)
     sqdiff = 0.0;
     for (row = 0; row < N; row++)
     {
-      // Removed local diff variable
       sqdiff += (xtmp[row] - x[row]) * (xtmp[row] - x[row]);
     }
 
@@ -111,7 +107,6 @@ int main(int argc, char *argv[])
     for (int col = 0; col < N; col++)
     {
       float value = rand()/(float)RAND_MAX;
-      // Row major order
       A[col + row*N] = value;
       rowsum += value;
     }
@@ -132,7 +127,6 @@ int main(int argc, char *argv[])
     double tmp = 0.0;
     for (int col = 0; col < N; col++)
     {
-      // Row major order
       tmp += A[row*N + col] * x[col];
     }
     tmp = b[row] - tmp;
