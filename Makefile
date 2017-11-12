@@ -1,8 +1,8 @@
 CC = icc
 
-#CFLAGS = -std=c99 -Wall -Ofast -march=native -mtune=native -funroll-loops
+#CFLAGS = -std=c99 -Wall -Ofast -march=native -mtune=native -funroll-loops -fopenmp
 
-CFLAGS = -std=c99 -Wall -O3 -xAVX -ansi-alias -ipo -no-prec-div
+CFLAGS = -std=c99 -Wall -O3 -xAVX -ansi-alias -ipo -no-prec-div -qopenmp
 
 LDFLAGS = -lm -g
 

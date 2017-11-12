@@ -23,6 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/time.h>
+// include openmp library
+#include <omp.h>
 
 static int N;
 static int MAX_ITERATIONS;
@@ -30,6 +32,9 @@ static int SEED;
 static float CONVERGENCE_THRESHOLD;
 
 #define SEPARATOR "------------------------------------\n"
+
+// define number of threads
+#define NUM_THREADS 2
 
 // Return the current time in seconds since the Epoch
 double get_timestamp();
@@ -47,11 +52,14 @@ int run(float *A, float *b, float *x, float *xtmp)
   float sqdiff;
   float *ptrtmp;
 
+  omp_set_num_threads(NUM_THREADS);
+
   // Loop until converged or maximum iterations reached
   itr = 0;
   do
   {
     // Perfom Jacobi iteration
+    #pragma omp parallel
     for (row = 0; row < N; row++)
     {
       dot = 0.0;
@@ -63,7 +71,7 @@ int run(float *A, float *b, float *x, float *xtmp)
 
       xtmp[row] = (b[row] - dot) / A[row + row*N];
     }
-
+    
     // Swap pointers
     ptrtmp = x;
     x      = xtmp;
