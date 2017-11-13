@@ -34,7 +34,7 @@ static float CONVERGENCE_THRESHOLD;
 #define SEPARATOR "------------------------------------\n"
 
 // define number of threads
-#define NUM_THREADS 2
+#define NUM_THREADS 4
 
 // Return the current time in seconds since the Epoch
 double get_timestamp();
@@ -59,10 +59,11 @@ int run(float *A, float *b, float *x, float *xtmp)
   do
   {
     // Perfom Jacobi iteration
-    #pragma omp parallel
+    #pragma omp parallel for
     for (row = 0; row < N; row++)
     {
       dot = 0.0;
+
       for (col = 0; col < N; col++)
       {
           dot += A[col + row*N] * x[col];
@@ -71,7 +72,7 @@ int run(float *A, float *b, float *x, float *xtmp)
 
       xtmp[row] = (b[row] - dot) / A[row + row*N];
     }
-    
+
     // Swap pointers
     ptrtmp = x;
     x      = xtmp;
