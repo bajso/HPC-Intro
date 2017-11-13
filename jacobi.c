@@ -30,6 +30,7 @@ static int N;
 static int MAX_ITERATIONS;
 static int SEED;
 static float CONVERGENCE_THRESHOLD;
+int nthreads;
 
 #define SEPARATOR "------------------------------------\n"
 
@@ -59,7 +60,14 @@ int run(float *A, float *b, float *x, float *xtmp)
   do
   {
     // Perfom Jacobi iteration
-  #pragma omp parallel for schedule(dynamic, 64)
+  #pragma omp parallel shared(A,b,x,xtmp,dot,nthreads) private(row,col)
+  {
+    #pragma omp master
+    {
+      // to check how many threads have spawned
+      nthreads = omp_get_num_threads();
+    }
+    #pragma omp for
     for (row = 0; row < N; row++)
     {
       dot = 0.0;
@@ -71,7 +79,7 @@ int run(float *A, float *b, float *x, float *xtmp)
 
       xtmp[row] = (b[row] - dot) / A[row + row*N];
     }
-
+  }
     // Swap pointers
     ptrtmp = x;
     x      = xtmp;
@@ -149,6 +157,7 @@ int main(int argc, char *argv[])
   printf("Iterations     = %d\n", itr);
   printf("Total runtime  = %lf seconds\n", (total_end-total_start));
   printf("Solver runtime = %lf seconds\n", (solve_end-solve_start));
+  printf("Number of threads = %d\n", nthreads);
   if (itr == MAX_ITERATIONS)
     printf("WARNING: solution did not converge\n");
   printf(SEPARATOR);
