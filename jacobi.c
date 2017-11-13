@@ -59,11 +59,10 @@ int run(float *A, float *b, float *x, float *xtmp)
   do
   {
     // Perfom Jacobi iteration
-    #pragma omp parallel for
+  #pragma omp parallel for private(row)
     for (row = 0; row < N; row++)
     {
       dot = 0.0;
-
       for (col = 0; col < N; col++)
       {
           dot += A[col + row*N] * x[col];
@@ -80,11 +79,12 @@ int run(float *A, float *b, float *x, float *xtmp)
 
     // Check for convergence
     sqdiff = 0.0;
+  #pragma omp parallel for private(row)
     for (row = 0; row < N; row++)
     {
       sqdiff += (xtmp[row] - x[row]) * (xtmp[row] - x[row]);
     }
-
+    
     itr++;
   } while ((itr < MAX_ITERATIONS) && (sqrt(sqdiff) > CONVERGENCE_THRESHOLD));
 
