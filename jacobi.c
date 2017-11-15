@@ -35,7 +35,7 @@ int nthreads;
 #define SEPARATOR "------------------------------------\n"
 
 // define number of threads
-#define NUM_THREADS 4
+#define NUM_THREADS 15
 
 // Return the current time in seconds since the Epoch
 double get_timestamp();
