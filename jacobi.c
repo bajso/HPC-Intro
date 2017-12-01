@@ -35,7 +35,7 @@ int nthreads;
 #define SEPARATOR "------------------------------------\n"
 
 // define number of threads
-#define NUM_THREADS 15
+#define NUM_THREADS 16
 
 // Return the current time in seconds since the Epoch
 double get_timestamp();
@@ -119,12 +119,15 @@ int main(int argc, char *argv[])
 
   // Initialize data
   srand(SEED);
-  for (int row = 0; row < N; row++)
+  float rowsum, value;
+  int row, col;
+  #pragma omp parallel for shared(A,b,x,rowsum,value) private(row,col) schedule(auto)
+  for (row = 0; row < N; row++)
   {
-    float rowsum = 0.0;
-    for (int col = 0; col < N; col++)
+    rowsum = 0.0;
+    for (col = 0; col < N; col++)
     {
-      float value = rand()/(float)RAND_MAX;
+      value = rand()/(float)RAND_MAX;
       A[col + row*N] = value;
       rowsum += value;
     }
